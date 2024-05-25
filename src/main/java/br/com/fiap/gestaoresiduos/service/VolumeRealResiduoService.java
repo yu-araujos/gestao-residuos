@@ -1,7 +1,6 @@
 package br.com.fiap.gestaoresiduos.service;
 
 import br.com.fiap.gestaoresiduos.model.VolumeRealResiduo;
-import br.com.fiap.gestaoresiduos.model.VolumeRealResiduoPK;
 import br.com.fiap.gestaoresiduos.repository.VolumeRealResiduoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class VolumeRealResiduoService {
         return volumeRealResiduoRepository.save(volumeRealResiduo);
     }
 
-    public VolumeRealResiduo buscarPorId(VolumeRealResiduoPK id) {
+    public VolumeRealResiduo buscarPorId(Long id) {
         Optional<VolumeRealResiduo> volumeRealResiduoOptional = volumeRealResiduoRepository.findById(id);
         if (volumeRealResiduoOptional.isPresent()) {
             return volumeRealResiduoOptional.get();
@@ -32,7 +31,7 @@ public class VolumeRealResiduoService {
         return volumeRealResiduoRepository.findAll();
     }
 
-    public void remover(VolumeRealResiduoPK id) {
+    public void remover(Long id) {
         Optional<VolumeRealResiduo> volumeRealResiduoOptional = volumeRealResiduoRepository.findById(id);
         if (volumeRealResiduoOptional.isPresent()) {
             volumeRealResiduoRepository.delete(volumeRealResiduoOptional.get());
@@ -42,7 +41,7 @@ public class VolumeRealResiduoService {
     }
 
     public VolumeRealResiduo atualizar(VolumeRealResiduo volumeRealResiduo) {
-        Optional<VolumeRealResiduo> volumeRealResiduoOptional = volumeRealResiduoRepository.findById(volumeRealResiduo.getId());
+        Optional<VolumeRealResiduo> volumeRealResiduoOptional = volumeRealResiduoRepository.findById(volumeRealResiduo.getCdVlRealResiduo());
         if (volumeRealResiduoOptional.isPresent()) {
             return volumeRealResiduoRepository.save(volumeRealResiduo);
         } else {

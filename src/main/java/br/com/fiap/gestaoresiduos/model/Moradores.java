@@ -11,17 +11,13 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class Moradores {
+
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "MORADORES_SEQ"
-    )
-    @SequenceGenerator(
-            name = "MORADORES_SEQ",
-            sequenceName = "MORADORES_SEQ",
-            allocationSize = 50
-    )
-    private Long cdMoradores;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MORADORES_SEQ")
+    @SequenceGenerator(name = "MORADORES_SEQ", sequenceName = "MORADORES_SEQ", allocationSize = 50)
+    @Column(name = "cd_morador")
+    private Long cdMorador;
+
     private String dsNome;
     private String dsEmail;
     private String dsEndereco;

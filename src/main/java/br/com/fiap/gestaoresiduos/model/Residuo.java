@@ -14,10 +14,16 @@ public class Residuo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RESIDUO_SEQ")
     @SequenceGenerator(name = "RESIDUO_SEQ", sequenceName = "RESIDUO_SEQ", allocationSize = 50)
+    @Column(name = "cd_residuo")
     private Long cdResiduo;
 
-    @EmbeddedId
-    private ResiduoPK id;
+    @ManyToOne
+    @JoinColumn(name = "cd_cadastro")
+    private Cadastro cadastro;
+
+    @ManyToOne
+    @JoinColumn(name = "cd_rastreio")
+    private Rastreio rastreio;
 
     private String dsResiduo;
     private String vlMaximo;

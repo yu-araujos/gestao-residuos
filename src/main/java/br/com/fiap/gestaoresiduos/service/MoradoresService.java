@@ -41,7 +41,7 @@ public class MoradoresService {
     }
 
     public Moradores atualizar(Moradores morador) {
-        Optional<Moradores> moradorOptional = moradoresRepository.findById(morador.getCdMoradores());
+        Optional<Moradores> moradorOptional = moradoresRepository.findById(morador.getCdMorador());
         if(moradorOptional.isPresent()) {
             return moradoresRepository.save(morador);
         } else {

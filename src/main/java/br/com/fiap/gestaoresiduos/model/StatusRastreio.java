@@ -17,10 +17,16 @@ public class StatusRastreio {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STATUS_RASTREIO_SEQ")
     @SequenceGenerator(name = "STATUS_RASTREIO_SEQ", sequenceName = "STATUS_RASTREIO_SEQ", allocationSize = 50)
+    @Column(name = "cd_status_rastreio")
     private Long cdStatusRastreio;
 
-    @EmbeddedId
-    private StatusRastreioPK id;
+    @ManyToOne
+    @JoinColumn(name = "cd_rastreio")
+    private Rastreio rastreio;
+
+    @ManyToOne
+    @JoinColumn(name = "cd_cadastro")
+    private Cadastro cadastro;
 
     private String dsEnderecoInicial;
     private String dsEnderecoAtual;

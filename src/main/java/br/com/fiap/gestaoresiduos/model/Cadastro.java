@@ -24,6 +24,7 @@ public class Cadastro {
             sequenceName = "CADASTRO_SEQ",
             allocationSize = 50
     )
+    @Column(name = "cd_cadastro")
     private Long cdCadastro;
 
     @NotBlank(message = "O nome é obrigatório")
