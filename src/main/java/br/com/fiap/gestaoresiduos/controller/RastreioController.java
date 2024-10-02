@@ -2,9 +2,11 @@ package br.com.fiap.gestaoresiduos.controller;
 
 import br.com.fiap.gestaoresiduos.model.Cadastro;
 import br.com.fiap.gestaoresiduos.model.Rastreio;
-import br.com.fiap.gestaoresiduos.model.RastreioPK;
 import br.com.fiap.gestaoresiduos.model.Residuo;
 import br.com.fiap.gestaoresiduos.repository.RastreioRepository;
+import br.com.fiap.gestaoresiduos.repository.CadastroRepository;
+import br.com.fiap.gestaoresiduos.repository.ResiduosRepository;
+import br.com.fiap.gestaoresiduos.service.RastreioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,56 +20,58 @@ public class RastreioController {
     @Autowired
     private RastreioRepository rastreioRepository;
 
+    @Autowired
+    private CadastroRepository cadastroRepository;
+
+    @Autowired
+    private ResiduosRepository residuoRepository;
+    @Autowired
+    private RastreioService rastreioService;
+
     @GetMapping
     public List<Rastreio> getAllRastreios() {
         return rastreioRepository.findAll();
     }
 
-    @GetMapping("/{cdCadastro}/{cdResiduo}")
-    public ResponseEntity<Rastreio> getRastreioById(@PathVariable Long cdCadastro, @PathVariable Long cdResiduo) {
-        Cadastro cadastro = new Cadastro();
-        cadastro.setCdCadastro(cdCadastro);
-        Residuo residuo = new Residuo();
-        residuo.setCdResiduo(cdResiduo);
-        RastreioPK id = new RastreioPK(cadastro, residuo);
-        return rastreioRepository.findById(id)
+    @GetMapping("/{cdRastreio}")
+    public ResponseEntity<Rastreio> getRastreioById(@PathVariable Long cdRastreio) {
+        return rastreioRepository.findById(cdRastreio)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Rastreio createRastreio(@RequestBody Rastreio rastreio) {
-        return rastreioRepository.save(rastreio);
+    public ResponseEntity<Rastreio> createRastreio(@RequestBody Rastreio rastreio) {
+        Rastreio createdRastreio = rastreioService.createRastreio(rastreio);
+        return ResponseEntity.ok(createdRastreio);
     }
 
-    @PutMapping("/{cdCadastro}/{cdResiduo}")
-    public ResponseEntity<Rastreio> updateRastreio(@PathVariable Long cdCadastro, @PathVariable Long cdResiduo, @RequestBody Rastreio rastreioDetails) {
-        Cadastro cadastro = new Cadastro();
-        cadastro.setCdCadastro(cdCadastro);
-        Residuo residuo = new Residuo();
-        residuo.setCdResiduo(cdResiduo);
-        RastreioPK id = new RastreioPK(cadastro, residuo);
-        return rastreioRepository.findById(id)
+
+    @PutMapping("/{cdRastreio}")
+    public ResponseEntity<Rastreio> updateRastreio(@PathVariable Long cdRastreio, @RequestBody Rastreio rastreioDetails) {
+        return rastreioRepository.findById(cdRastreio)
                 .map(rastreio -> {
-                    // Atualizar outros campos conforme necessário
-                    Rastreio updatedRastreio = rastreioRepository.save(rastreioDetails);
+                    rastreio.setNrRastreio(rastreioDetails.getNrRastreio());
+                    rastreio.setStCaminhao(rastreioDetails.getStCaminhao());
+                    if (rastreioDetails.getCadastro() != null && rastreioDetails.getCadastro().getCdCadastro() != null) {
+                        rastreio.setCadastro(cadastroRepository.findById(rastreioDetails.getCadastro().getCdCadastro()).orElse(null));
+                    }
+                    if (rastreioDetails.getResiduo() != null && rastreioDetails.getResiduo().getCdResiduo() != null) {
+                        rastreio.setResiduo(residuoRepository.findById(rastreioDetails.getResiduo().getCdResiduo()).orElse(null));
+                    }
+                    Rastreio updatedRastreio = rastreioRepository.save(rastreio);
                     return ResponseEntity.ok(updatedRastreio);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{cdCadastro}/{cdResiduo}")
-    public ResponseEntity<Void> deleteRastreio(@PathVariable Long cdCadastro, @PathVariable Long cdResiduo) {
-        Cadastro cadastro = new Cadastro();
-        cadastro.setCdCadastro(cdCadastro);
-        Residuo residuo = new Residuo();
-        residuo.setCdResiduo(cdResiduo);
-        RastreioPK id = new RastreioPK(cadastro, residuo);
-        return rastreioRepository.findById(id)
+    @DeleteMapping("/{cdRastreio}")
+    public ResponseEntity<Void> deleteRastreio(@PathVariable Long cdRastreio) {
+        return rastreioRepository.findById(cdRastreio)
                 .map(rastreio -> {
                     rastreioRepository.delete(rastreio);
                     return ResponseEntity.noContent().<Void>build();
                 })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 }

@@ -7,28 +7,41 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/agendamento-de-coleta")
 public class AgendamentoColetaController {
     @Autowired
     private CalendarioColetaService calendarioColetaService;
 
+    @GetMapping
+    public ResponseEntity<List<CalendarioColeta>> listarTodos() {
+        List<CalendarioColeta> coletas = calendarioColetaService.listarTodos();
+        return ResponseEntity.ok(coletas);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CalendarioColeta> buscarPorId(@PathVariable Long id) {
+        CalendarioColeta coleta = calendarioColetaService.buscarPorId(id);
+        return ResponseEntity.ok(coleta);
+    }
+
     @PostMapping
-    public ResponseEntity<CalendarioColeta> agendarColeta(@RequestBody CalendarioColeta calendarioColeta) {
-        CalendarioColeta novaColeta = calendarioColetaService.gravar(calendarioColeta);
-        return new ResponseEntity<>(novaColeta, HttpStatus.CREATED);
+    public ResponseEntity<CalendarioColeta> criar(@RequestBody CalendarioColeta coleta) {
+        CalendarioColeta novaColeta = calendarioColetaService.salvar(coleta);
+        return ResponseEntity.status(201).body(novaColeta);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CalendarioColeta> atualizarAgendamento(@PathVariable Long id, @RequestBody CalendarioColeta calendarioColeta) {
-        calendarioColeta.setCdCalendarioColeta(id); // Define o ID do objeto calendarioColeta com base no ID da URL
-        CalendarioColeta agendamentoAtualizado = calendarioColetaService.atualizar(calendarioColeta);
-        return new ResponseEntity<>(agendamentoAtualizado, HttpStatus.OK);
+    public ResponseEntity<CalendarioColeta> atualizar(@PathVariable Long id, @RequestBody CalendarioColeta coletaDetalhes) {
+        CalendarioColeta coletaAtualizada = calendarioColetaService.atualizar(id, coletaDetalhes);
+        return ResponseEntity.ok(coletaAtualizada);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> cancelarAgendamento(@PathVariable Long id) {
-        calendarioColetaService.remover(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        calendarioColetaService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

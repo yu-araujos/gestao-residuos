@@ -1,7 +1,6 @@
 package br.com.fiap.gestaoresiduos.service;
 
 import br.com.fiap.gestaoresiduos.model.StatusRastreio;
-import br.com.fiap.gestaoresiduos.model.StatusRastreioPK;
 import br.com.fiap.gestaoresiduos.repository.StatusRastreioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class StatusRastreioService {
         return statusRastreioRepository.save(statusRastreio);
     }
 
-    public StatusRastreio buscarPorId(StatusRastreioPK id) {
+    public StatusRastreio buscarPorId(Long id) {
         Optional<StatusRastreio> statusRastreioOptional = statusRastreioRepository.findById(id);
         if (statusRastreioOptional.isPresent()) {
             return statusRastreioOptional.get();
@@ -32,7 +31,7 @@ public class StatusRastreioService {
         return statusRastreioRepository.findAll();
     }
 
-    public void remover(StatusRastreioPK id) {
+    public void remover(Long id) {
         Optional<StatusRastreio> statusRastreioOptional = statusRastreioRepository.findById(id);
         if (statusRastreioOptional.isPresent()) {
             statusRastreioRepository.delete(statusRastreioOptional.get());
@@ -42,7 +41,7 @@ public class StatusRastreioService {
     }
 
     public StatusRastreio atualizar(StatusRastreio statusRastreio) {
-        Optional<StatusRastreio> statusRastreioOptional = statusRastreioRepository.findById(statusRastreio.getId());
+        Optional<StatusRastreio> statusRastreioOptional = statusRastreioRepository.findById(statusRastreio.getCdStatusRastreio());
         if (statusRastreioOptional.isPresent()) {
             return statusRastreioRepository.save(statusRastreio);
         } else {

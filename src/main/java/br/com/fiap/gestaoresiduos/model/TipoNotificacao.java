@@ -21,7 +21,9 @@ public class TipoNotificacao {
             sequenceName = "TIPO_NOTIFICACAO_SEQ",
             allocationSize = 50
     )
+    @Column(name = "cd_tipo_mensagem")
     private Long cdTipoNotificacao;
 
+    @Column(name = "ds_mensagem")
     private String dsMensagem;
 }

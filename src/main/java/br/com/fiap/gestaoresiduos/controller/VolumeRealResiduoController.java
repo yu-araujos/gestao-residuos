@@ -2,7 +2,7 @@ package br.com.fiap.gestaoresiduos.controller;
 
 import br.com.fiap.gestaoresiduos.model.Residuo;
 import br.com.fiap.gestaoresiduos.model.VolumeRealResiduo;
-import br.com.fiap.gestaoresiduos.model.VolumeRealResiduoPK;
+import br.com.fiap.gestaoresiduos.repository.ResiduosRepository;
 import br.com.fiap.gestaoresiduos.repository.VolumeRealResiduoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,46 +17,49 @@ public class VolumeRealResiduoController {
     @Autowired
     private VolumeRealResiduoRepository volumeRealResiduoRepository;
 
+    @Autowired
+    private ResiduosRepository residuoRepository;
+
     @GetMapping
     public List<VolumeRealResiduo> getAllVolumeRealResiduos() {
         return volumeRealResiduoRepository.findAll();
     }
 
-    @GetMapping("/{cdResiduo}")
-    public ResponseEntity<VolumeRealResiduo> getVolumeRealResiduoById(@PathVariable Long cdResiduo) {
-        Residuo residuo = new Residuo();
-        residuo.setCdResiduo(cdResiduo);
-        VolumeRealResiduoPK id = new VolumeRealResiduoPK(residuo);
-        return volumeRealResiduoRepository.findById(id)
+    @GetMapping("/{cdVolumeRealResiduo}")
+    public ResponseEntity<VolumeRealResiduo> getVolumeRealResiduoById(@PathVariable Long cdVolumeRealResiduo) {
+        return volumeRealResiduoRepository.findById(cdVolumeRealResiduo)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public VolumeRealResiduo createVolumeRealResiduo(@RequestBody VolumeRealResiduo volumeRealResiduo) {
-        return volumeRealResiduoRepository.save(volumeRealResiduo);
+    public ResponseEntity<VolumeRealResiduo> createVolumeRealResiduo(@RequestBody VolumeRealResiduo volumeRealResiduo) {
+        Residuo residuo = residuoRepository.findById(volumeRealResiduo.getResiduo().getCdResiduo())
+                .orElseThrow(() -> new RuntimeException("Residuo não encontrado"));
+        volumeRealResiduo.setResiduo(residuo);
+        VolumeRealResiduo novoVolumeRealResiduo = volumeRealResiduoRepository.save(volumeRealResiduo);
+        return ResponseEntity.ok(novoVolumeRealResiduo);
     }
 
-    @PutMapping("/{cdResiduo}")
-    public ResponseEntity<VolumeRealResiduo> updateVolumeRealResiduo(@PathVariable Long cdResiduo, @RequestBody VolumeRealResiduo volumeRealResiduoDetails) {
-        Residuo residuo = new Residuo();
-        residuo.setCdResiduo(cdResiduo);
-        VolumeRealResiduoPK id = new VolumeRealResiduoPK(residuo);
-        return volumeRealResiduoRepository.findById(id)
+    @PutMapping("/{cdVolumeRealResiduo}")
+    public ResponseEntity<VolumeRealResiduo> updateVolumeRealResiduo(@PathVariable Long cdVolumeRealResiduo, @RequestBody VolumeRealResiduo volumeRealResiduoDetails) {
+        return volumeRealResiduoRepository.findById(cdVolumeRealResiduo)
                 .map(volumeRealResiduo -> {
-                    // Atualizar outros campos conforme necessário
-                    VolumeRealResiduo updatedVolumeRealResiduo = volumeRealResiduoRepository.save(volumeRealResiduoDetails);
+                    Residuo residuo = residuoRepository.findById(volumeRealResiduoDetails.getResiduo().getCdResiduo())
+                            .orElseThrow(() -> new RuntimeException("Residuo não encontrado"));
+                    volumeRealResiduo.setResiduo(residuo);
+                    volumeRealResiduo.setVlResOrg(volumeRealResiduoDetails.getVlResOrg());
+                    volumeRealResiduo.setVlResRec(volumeRealResiduoDetails.getVlResRec());
+                    volumeRealResiduo.setVlResPer(volumeRealResiduoDetails.getVlResPer());
+                    VolumeRealResiduo updatedVolumeRealResiduo = volumeRealResiduoRepository.save(volumeRealResiduo);
                     return ResponseEntity.ok(updatedVolumeRealResiduo);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{cdResiduo}")
-    public ResponseEntity<Void> deleteVolumeRealResiduo(@PathVariable Long cdResiduo) {
-        Residuo residuo = new Residuo();
-        residuo.setCdResiduo(cdResiduo);
-        VolumeRealResiduoPK id = new VolumeRealResiduoPK(residuo);
-        return volumeRealResiduoRepository.findById(id)
+    @DeleteMapping("/{cdVolumeRealResiduo}")
+    public ResponseEntity<Void> deleteVolumeRealResiduo(@PathVariable Long cdVolumeRealResiduo) {
+        return volumeRealResiduoRepository.findById(cdVolumeRealResiduo)
                 .map(volumeRealResiduo -> {
                     volumeRealResiduoRepository.delete(volumeRealResiduo);
                     return ResponseEntity.noContent().<Void>build();

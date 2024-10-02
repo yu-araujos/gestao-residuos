@@ -1,7 +1,6 @@
 package br.com.fiap.gestaoresiduos.service;
 
 import br.com.fiap.gestaoresiduos.model.Residuo;
-import br.com.fiap.gestaoresiduos.model.ResiduoPK;
 import br.com.fiap.gestaoresiduos.repository.ResiduosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class ResiduoService {
         return residuoRepository.save(residuo);
     }
 
-    public Residuo buscarPorId(ResiduoPK id) {
+    public Residuo buscarPorId(Long id) {
         Optional<Residuo> residuoOptional = residuoRepository.findById(id);
         if (residuoOptional.isPresent()) {
             return residuoOptional.get();
@@ -32,7 +31,7 @@ public class ResiduoService {
         return residuoRepository.findAll();
     }
 
-    public void remover(ResiduoPK id) {
+    public void remover(Long id) {
         Optional<Residuo> residuoOptional = residuoRepository.findById(id);
         if (residuoOptional.isPresent()) {
             residuoRepository.delete(residuoOptional.get());
@@ -42,7 +41,7 @@ public class ResiduoService {
     }
 
     public Residuo atualizar(Residuo residuo) {
-        Optional<Residuo> residuoOptional = residuoRepository.findById(residuo.getId());
+        Optional<Residuo> residuoOptional = residuoRepository.findById(residuo.getCdResiduo());
         if (residuoOptional.isPresent()) {
             return residuoRepository.save(residuo);
         } else {

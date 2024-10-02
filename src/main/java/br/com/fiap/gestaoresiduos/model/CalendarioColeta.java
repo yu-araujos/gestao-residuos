@@ -23,6 +23,7 @@ public class CalendarioColeta {
             sequenceName = "CALENDARIO_COLETA_SEQ",
             allocationSize = 50
     )
+    @Column(name = "cd_calendario_coleta")
     private Long cdCalendarioColeta;
     @Column(name = "dia_coleta")
     private LocalDate diaColeta;

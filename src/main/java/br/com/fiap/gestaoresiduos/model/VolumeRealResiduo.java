@@ -14,10 +14,12 @@ public class VolumeRealResiduo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "VL_REAL_RESIDUO_SEQ")
     @SequenceGenerator(name = "VL_REAL_RESIDUO_SEQ", sequenceName = "VL_REAL_RESIDUO_SEQ", allocationSize = 50)
+    @Column(name = "cd_vl_real_residuo")
     private Long cdVlRealResiduo;
 
-    @EmbeddedId
-    private VolumeRealResiduoPK id;
+    @ManyToOne
+    @JoinColumn(name = "cd_residuo")
+    private Residuo residuo;
 
     private String vlResOrg;
     private String vlResRec;
