@@ -1,17 +1,15 @@
 # Gestão de Resíduos - CI/CD Pipeline e Docker
 
 ## Sumário
-1. [Introdução](#introdução)
-2. [Pré-requisitos](#pré-requisitos)
-3. [Instruções de Execução](#instruções-de-execução)
-   - [Rodando com Docker Compose](#rodando-com-docker-compose)
-   - [Rodando apenas com Docker](#rodando-apenas-com-docker)
-4. [Pipeline CI/CD](#pipeline-cicd)
-5. [Estrutura do Projeto](#estrutura-do-projeto)
-6. [Deploy em Staging e Produção](#deploy-em-staging-e-produção)
+1. [Introdução]
+2. [Pré-requisitos]
+3. [Instruções de Execução]
+   - [Rodando com Docker Compose]
+   - [Rodando apenas com Docker]
+4. [Pipeline CI/CD]
+5. [Estrutura do Projeto]
+6. [Deploy em Staging e Produção]
 7. [Logs e Debugging](#logs-e-debugging)
-8. [Contribuindo](#contribuindo)
-9. [Licença](#licença)
 
 ---
 
