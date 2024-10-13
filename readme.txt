@@ -1,1 +1,1 @@
-Graduation project that automates waste management of garbage in the ocean.
+teste
